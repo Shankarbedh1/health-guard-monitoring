@@ -1,0 +1,108 @@
+/* styles.css */
+/* body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+} */
+
+.deit-container {
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+    width: 100%; 
+    max-width: 1200px; 
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: none;
+    z-index: 1;
+}
+
+
+
+.deit-container-open{
+    display: flex;
+    flex-direction: column ;
+}
+
+.deit-container-title{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.deit-container-title h1 {
+    font-size: 24px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+.deit-container-title button{
+    position: absolute;
+    right: 0px;
+    top: 0px;
+    text-decoration: none;
+    border: none;
+    font-weight: 400;
+    font-size: 16px;
+    padding: 10px 20px 10px 20px;
+    background-color: #e60505;
+    border-top-left-radius: 0px;
+    border-bottom-left-radius: 0px;
+    border-bottom-right-radius: 0px;
+    height: 45px;
+  
+}
+
+
+.deit-container form {
+    display: flex;
+    flex-direction: column;
+}
+
+.deit-container .row {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.deit-container .row label {
+    gap:10px
+   
+}
+
+.deit-container .row select{
+    height: 30px;
+
+}
+
+.row input,
+.row select,
+form button {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.deit-container form button {
+    background-color: #28a745;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+.deit-container form button:hover {
+    background-color: #218838;
+}
+
+#results {
+    margin-top: 20px;
+}

@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exercises</title>
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css"/>
+    <link rel="stylesheet" href="styles.css" />
+    <style>
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: #fff; /* Adjust as needed */
+            z-index: 1000;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 3px 0; /* Reduce padding to decrease height */
+        }
+
+        nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 45px; /* Adjusted navbar height */
+        }
+
+        .nav__logo img {
+            height: 25px; /* Reduced logo size */
+        }
+
+        body {
+            padding-top: 50px; /* Adjust based on navbar height */
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <nav>
+            <div class="nav__header">
+                <div class="nav__logo">
+                    <a href="#"><img src="assets/logo2.png" alt="logo" />Fitness</a>
+                </div>
+                <div class="nav__menu__btn" id="menu-btn">
+                    <span><i class="ri-menu-line"></i></span>
+                </div>
+            </div>
+            <ul class="nav__links" id="nav-links">
+                <li class="link"><a href="ind.html">Home</a></li>
+                <li class="link"><a href="about.html">About</a></li>
+                
+                <li class="link"><a href="trainers.html">Trainers</a></li>
+                <li class="link"><a href="bmi.html">BMI</a></li>
+                <li class="link"><a href="premium.html">Premium</a></li>
+                <li class="dropdown">
+                    <button class="dropdown-button">
+                        <span>Contact Us</span>
+                    </button>
+                    <div class="dropdown-menu">
+                        <button><a href="mailto:samalasaiteja1143@gmail.com">Email</a></button>
+                        <button><a href="tel:6305103588">999xxxxxx</a></button>
+                    </div>
+                </li>
+                <li class="link"><button class="btn" id="logout-btn">Logout</button></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="section__container class__container" id="class">
+        <h2 class="section__header">Our Exercises</h2>
+        <div class="class__grid">
+            <div class="class__card">
+                <img src="assets/dot-bg.png" alt="bg" class="class__bg" />
+                <img src="assets/ex1.png" alt="class" />
+                <div class="class__content">
+                    <h4>How To Exercise At Home Without Equipment</h4>
+                    <a href="exp1.html">Go</a>
+                </div>
+            </div>
+            <div class="class__card">
+                <img src="assets/dot-bg.png" alt="bg" class="class__bg" />
+                <img src="assets/surya.jpg" alt="class" />
+                <div class="class__content">
+                    <h4>12 steps of Surya Namaskar</h4>
+                    <a href="surya.html">Go</a>
+                </div>
+            </div>
+            <div class="class__card">
+                <img src="assets/dot-bg.png" alt="bg" class="class__bg" />
+                <img src="assets/ex3.png" alt="class" />
+                <div class="class__content">
+                    <h4>Building the foundation to great posture</h4>
+                    <a href="ex3.html">Go</a>
+                </div>
+            </div>
+            <div class="class__card">
+                <img src="assets/dot-bg.png" alt="bg" class="class__bg" />
+                <img src="assets/ex4.png" alt="class" />
+                <div class="class__content">
+                    <h4>This 4-Move Wall Workout Will Get You Super Fit</h4>
+                    <a href="ex4.html">Go</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="class__grid">
+            <div class="class__card">
+                <img src="assets/dot-bg.png" alt="bg" class="class__bg" />
+                <img src="assets/ex5.png" alt="class" />
+                <div class="class__content">
+                    <h4>Cardio Warmup</h4>
+                    <a href="ex5.html">Go</a>
+                </div>
+            </div>
+
+            <div class="class__card">
+                <img src="assets/dot-bg.png" alt="bg" class="class__bg" />
+                <img src="assets/ex6.png" alt="class" />
+                <div class="class__content">
+                    <h4>AB Crunch Workout</h4>
+                    <a href="ex6.html">Go</a>
+                </div>
+            </div>
+
+            <div class="class__card">
+                <img src="assets/dot-bg.png" alt="bg" class="class__bg" />
+                <img src="assets/ex7.png" alt="class" />
+                <div class="class__content">
+                    <h4>ABS of Steel Workout</h4>
+                    <a href="ex7.html">Go</a>
+                </div>
+            </div>
+
+            <div class="class__card">
+                <img src="assets/dot-bg.png" alt="bg" class="class__bg" />
+                <img src="assets/ex8.png" alt="class" />
+                <div class="class__content">
+                    <h4>ABS on Fire Workout</h4>
+                    <a href="ex8.html">Go</a>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+
+    <center><h4>More Exercises are added soon...!!</h4></center>
+
+    <script>
+        document.getElementById("logout-btn").addEventListener("click", function () {
+            // Redirect to the login page (update the path if needed)
+            window.location.href = "login.html";
+
+            // Clear any stored authentication data
+            localStorage.removeItem("userToken"); // Example for local storage
+            sessionStorage.removeItem("userSession"); // Example for session storage
+        });
+    </script>
+</body>
+</html>
