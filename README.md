@@ -1,465 +1,106 @@
-**Installation**: `npm install sift`, or `yarn add sift`
+﻿# whatwg-url
 
-## Sift is a tiny library for using MongoDB queries in Javascript
+whatwg-url is a full implementation of the WHATWG [URL Standard](https://url.spec.whatwg.org/). It can be used standalone, but it also exposes a lot of the internal algorithms that are useful for integrating a URL parser into a project like [jsdom](https://github.com/jsdom/jsdom).
 
-[![Build Status](https://secure.travis-ci.org/crcn/sift.js.png)](https://secure.travis-ci.org/crcn/sift.js)
+## Specification conformance
 
-<!-- [![Coverage Status](https://coveralls.io/repos/crcn/sift.js/badge.svg)](https://coveralls.io/r/crcn/sift.js)  -->
-<!-- [![Join the chat at https://gitter.im/crcn/sift.js](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/crcn/sift.js?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) -->
+whatwg-url is currently up to date with the URL spec up to commit [da212c9](https://github.com/whatwg/url/commit/da212c98f0bba9c35aec3728bbcc13f8f3a7eb52).
 
-**For extended documentation, checkout http://docs.mongodb.org/manual/reference/operator/query/**
+For `file:` URLs, whose [origin is left unspecified](https://url.spec.whatwg.org/#concept-url-origin), whatwg-url chooses to use a new opaque origin (which serializes to `"null"`).
 
-## Features:
-
-- Supported operators: [\$in](#in), [\$nin](#nin), [\$exists](#exists), [\$gte](#gte), [\$gt](#gt), [\$lte](#lte), [\$lt](#lt), [\$eq](#eq), [\$ne](#ne), [\$mod](#mod), [\$all](#all), [\$and](#and), [\$or](#or), [\$nor](#nor), [\$not](#not), [\$size](#size), [\$type](#type), [\$regex](#regex), [\$where](#where), [\$elemMatch](#elemmatch)
-- Regexp searches
-- Supports node.js, and web
-- Custom Operations
-- Tree-shaking (omitting functionality from web app bundles)
-
-## Examples
-
-```javascript
-import sift from "sift";
-
-// intersecting arrays
-const result1 = ["hello", "sifted", "array!"].filter(
-  sift({ $in: ["hello", "world"] }),
-); // ['hello']
-
-// regexp filter
-const result2 = ["craig", "john", "jake"].filter(sift(/^j/)); //['john','jake']
-
-// function filter
-const testFilter = sift({
-  //you can also filter against functions
-  name: function (value) {
-    return value.length == 5;
-  },
-});
-
-const result3 = [
-  {
-    name: "craig",
-  },
-  {
-    name: "john",
-  },
-  {
-    name: "jake",
-  },
-].filter(testFilter); // filtered: [{ name: 'craig' }]
-
-// you can test *single values* against your custom sifter
-testFilter({ name: "sarah" }); //true
-testFilter({ name: "tim" }); //false
-```
+whatwg-url does not yet implement any encoding handling beyond UTF-8. That is, the _encoding override_ parameter does not exist in our API.
 
 ## API
 
-### sift(query: MongoQuery, options?: Options): Function
+### The `URL` and `URLSearchParams` classes
 
-Creates a filter with all the built-in MongoDB query operations.
+The main API is provided by the [`URL`](https://url.spec.whatwg.org/#url-class) and [`URLSearchParams`](https://url.spec.whatwg.org/#interface-urlsearchparams) exports, which follows the spec's behavior in all ways (including e.g. `USVString` conversion). Most consumers of this library will want to use these.
 
-- `query` - the filter to use against the target array
-- `options`
-  - `operations` - [custom operations](#custom-operations)
-  - `compare` - compares difference between two values
+### Low-level URL Standard API
 
-Example:
+The following methods are exported for use by places like jsdom that need to implement things like [`HTMLHyperlinkElementUtils`](https://html.spec.whatwg.org/#htmlhyperlinkelementutils). They mostly operate on or return an "internal URL" or ["URL record"](https://url.spec.whatwg.org/#concept-url) type.
 
-```javascript
-import sift from "sift";
+- [URL parser](https://url.spec.whatwg.org/#concept-url-parser): `parseURL(input, { baseURL })`
+- [Basic URL parser](https://url.spec.whatwg.org/#concept-basic-url-parser): `basicURLParse(input, { baseURL, url, stateOverride })`
+- [URL serializer](https://url.spec.whatwg.org/#concept-url-serializer): `serializeURL(urlRecord, excludeFragment)`
+- [Host serializer](https://url.spec.whatwg.org/#concept-host-serializer): `serializeHost(hostFromURLRecord)`
+- [URL path serializer](https://url.spec.whatwg.org/#url-path-serializer): `serializePath(urlRecord)`
+- [Serialize an integer](https://url.spec.whatwg.org/#serialize-an-integer): `serializeInteger(number)`
+- [Origin](https://url.spec.whatwg.org/#concept-url-origin) [serializer](https://html.spec.whatwg.org/multipage/origin.html#ascii-serialisation-of-an-origin): `serializeURLOrigin(urlRecord)`
+- [Set the username](https://url.spec.whatwg.org/#set-the-username): `setTheUsername(urlRecord, usernameString)`
+- [Set the password](https://url.spec.whatwg.org/#set-the-password): `setThePassword(urlRecord, passwordString)`
+- [Has an opaque path](https://url.spec.whatwg.org/#url-opaque-path): `hasAnOpaquePath(urlRecord)`
+- [Cannot have a username/password/port](https://url.spec.whatwg.org/#cannot-have-a-username-password-port): `cannotHaveAUsernamePasswordPort(urlRecord)`
+- [Percent decode bytes](https://url.spec.whatwg.org/#percent-decode): `percentDecodeBytes(uint8Array)`
+- [Percent decode a string](https://url.spec.whatwg.org/#string-percent-decode): `percentDecodeString(string)`
 
-const test = sift({ $gt: 5 });
+The `stateOverride` parameter is one of the following strings:
 
-console.log(test(6)); // true
-console.log(test(4)); // false
+- [`"scheme start"`](https://url.spec.whatwg.org/#scheme-start-state)
+- [`"scheme"`](https://url.spec.whatwg.org/#scheme-state)
+- [`"no scheme"`](https://url.spec.whatwg.org/#no-scheme-state)
+- [`"special relative or authority"`](https://url.spec.whatwg.org/#special-relative-or-authority-state)
+- [`"path or authority"`](https://url.spec.whatwg.org/#path-or-authority-state)
+- [`"relative"`](https://url.spec.whatwg.org/#relative-state)
+- [`"relative slash"`](https://url.spec.whatwg.org/#relative-slash-state)
+- [`"special authority slashes"`](https://url.spec.whatwg.org/#special-authority-slashes-state)
+- [`"special authority ignore slashes"`](https://url.spec.whatwg.org/#special-authority-ignore-slashes-state)
+- [`"authority"`](https://url.spec.whatwg.org/#authority-state)
+- [`"host"`](https://url.spec.whatwg.org/#host-state)
+- [`"hostname"`](https://url.spec.whatwg.org/#hostname-state)
+- [`"port"`](https://url.spec.whatwg.org/#port-state)
+- [`"file"`](https://url.spec.whatwg.org/#file-state)
+- [`"file slash"`](https://url.spec.whatwg.org/#file-slash-state)
+- [`"file host"`](https://url.spec.whatwg.org/#file-host-state)
+- [`"path start"`](https://url.spec.whatwg.org/#path-start-state)
+- [`"path"`](https://url.spec.whatwg.org/#path-state)
+- [`"opaque path"`](https://url.spec.whatwg.org/#cannot-be-a-base-url-path-state)
+- [`"query"`](https://url.spec.whatwg.org/#query-state)
+- [`"fragment"`](https://url.spec.whatwg.org/#fragment-state)
 
-[3, 4, 5, 6, 7].filter(test); // [6, 7]
-```
+The URL record type has the following API:
 
-### createQueryTester(query: Query, options?: Options): Function
+- [`scheme`](https://url.spec.whatwg.org/#concept-url-scheme)
+- [`username`](https://url.spec.whatwg.org/#concept-url-username)
+- [`password`](https://url.spec.whatwg.org/#concept-url-password)
+- [`host`](https://url.spec.whatwg.org/#concept-url-host)
+- [`port`](https://url.spec.whatwg.org/#concept-url-port)
+- [`path`](https://url.spec.whatwg.org/#concept-url-path) (as an array of strings, or a string)
+- [`query`](https://url.spec.whatwg.org/#concept-url-query)
+- [`fragment`](https://url.spec.whatwg.org/#concept-url-fragment)
 
-Creates a filter function **without** built-in MongoDB query operations. This is useful
-if you're looking to omit certain operations from application bundles. See [Omitting built-in operations](#omitting-built-in-operations) for more info.
+These properties should be treated with care, as in general changing them will cause the URL record to be in an inconsistent state until the appropriate invocation of `basicURLParse` is used to fix it up. You can see examples of this in the URL Standard, where there are many step sequences like "4. Set context object’s url’s fragment to the empty string. 5. Basic URL parse _input_ with context object’s url as _url_ and fragment state as _state override_." In between those two steps, a URL record is in an unusable state.
 
-```javascript
-import { createQueryTester, $eq, $in } from "sift";
-const filter = createQueryTester({ $eq: 5 }, { operations: { $eq, $in } });
-```
+The return value of "failure" in the spec is represented by `null`. That is, functions like `parseURL` and `basicURLParse` can return _either_ a URL record _or_ `null`.
 
-### createEqualsOperation(params: any, ownerQuery: Query, options: Options): Operation
+### `whatwg-url/webidl2js-wrapper` module
 
-Used for [custom operations](#custom-operations).
+This module exports the `URL` and `URLSearchParams` [interface wrappers API](https://github.com/jsdom/webidl2js#for-interfaces) generated by [webidl2js](https://github.com/jsdom/webidl2js).
 
-```javascript
-import { createQueryTester, createEqualsOperation, $eq, $in } from "sift";
-const filter = createQueryTester(
-  { $mod: 5 },
-  {
-    operations: {
-      $something(mod, ownerQuery, options) {
-        return createEqualsOperation(
-          (value) => value % mod === 0,
-          ownerQuery,
-          options,
-        );
-      },
-    },
-  },
-);
-filter(10); // true
-filter(11); // false
-```
+## Development instructions
 
-## Supported Operators
+First, install [Node.js](https://nodejs.org/). Then, fetch the dependencies of whatwg-url, by running from this directory:
 
-See MongoDB's [advanced queries](http://www.mongodb.org/display/DOCS/Advanced+Queries) for more info.
+    npm install
 
-### \$in
+To run tests:
 
-array value must be _\$in_ the given query:
+    npm test
 
-Intersecting two arrays:
+To generate a coverage report:
 
-```javascript
-// filtered: ['Brazil']
-["Brazil", "Haiti", "Peru", "Chile"].filter(
-  sift({ $in: ["Costa Rica", "Brazil"] }),
-);
-```
+    npm run coverage
 
-Here's another example. This acts more like the \$or operator:
+To build and run the live viewer:
 
-```javascript
-[{ name: "Craig", location: "Brazil" }].filter(
-  sift({ location: { $in: ["Costa Rica", "Brazil"] } }),
-);
-```
+    npm run prepare
+    npm run build-live-viewer
 
-### \$nin
+Serve the contents of the `live-viewer` directory using any web server.
 
-Opposite of \$in:
+## Supporting whatwg-url
 
-```javascript
-// filtered: ['Haiti','Peru','Chile']
-["Brazil", "Haiti", "Peru", "Chile"].filter(
-  sift({ $nin: ["Costa Rica", "Brazil"] }),
-);
-```
+The jsdom project (including whatwg-url) is a community-driven project maintained by a team of [volunteers](https://github.com/orgs/jsdom/people). You could support us by:
 
-### \$exists
-
-Checks if whether a value exists:
-
-```javascript
-// filtered: ['Craig','Tim']
-sift({ $exists: true })(["Craig", null, "Tim"]);
-```
-
-You can also filter out values that don't exist
-
-```javascript
-// filtered: [{ name: "Tim" }]
-[{ name: "Craig", city: "Minneapolis" }, { name: "Tim" }].filter(
-  sift({ city: { $exists: false } }),
-);
-```
-
-### \$gte
-
-Checks if a number is >= value:
-
-```javascript
-// filtered: [2, 3]
-[0, 1, 2, 3].filter(sift({ $gte: 2 }));
-```
-
-### \$gt
-
-Checks if a number is > value:
-
-```javascript
-// filtered: [3]
-[0, 1, 2, 3].filter(sift({ $gt: 2 }));
-```
-
-### \$lte
-
-Checks if a number is <= value.
-
-```javascript
-// filtered: [0, 1, 2]
-[0, 1, 2, 3].filter(sift({ $lte: 2 }));
-```
-
-### \$lt
-
-Checks if number is < value.
-
-```javascript
-// filtered: [0, 1]
-[0, 1, 2, 3].filter(sift({ $lt: 2 }));
-```
-
-### \$eq
-
-Checks if `query === value`. Note that **\$eq can be omitted**. For **\$eq**, and **\$ne**
-
-```javascript
-// filtered: [{ state: 'MN' }]
-[{ state: "MN" }, { state: "CA" }, { state: "WI" }].filter(
-  sift({ state: { $eq: "MN" } }),
-);
-```
-
-Or:
-
-```javascript
-// filtered: [{ state: 'MN' }]
-[{ state: "MN" }, { state: "CA" }, { state: "WI" }].filter(
-  sift({ state: "MN" }),
-);
-```
-
-### \$ne
-
-Checks if `query !== value`.
-
-```javascript
-// filtered: [{ state: 'CA' }, { state: 'WI'}]
-[{ state: "MN" }, { state: "CA" }, { state: "WI" }].filter(
-  sift({ state: { $ne: "MN" } }),
-);
-```
-
-### \$mod
-
-Modulus:
-
-```javascript
-// filtered: [300, 600]
-[100, 200, 300, 400, 500, 600].filter(sift({ $mod: [3, 0] }));
-```
-
-### \$all
-
-values must match **everything** in array:
-
-```javascript
-// filtered: [ { tags: ['books','programming','travel' ]} ]
-[
-  { tags: ["books", "programming", "travel"] },
-  { tags: ["travel", "cooking"] },
-].filter(sift({ tags: { $all: ["books", "programming"] } }));
-```
-
-### \$and
-
-ability to use an array of expressions. All expressions must test true.
-
-```javascript
-// filtered: [ { name: 'Craig', state: 'MN' }]
-
-[
-  { name: "Craig", state: "MN" },
-  { name: "Tim", state: "MN" },
-  { name: "Joe", state: "CA" },
-].filter(sift({ $and: [{ name: "Craig" }, { state: "MN" }] }));
-```
-
-### \$or
-
-OR array of expressions.
-
-```javascript
-// filtered: [ { name: 'Craig', state: 'MN' }, { name: 'Tim', state: 'MN' }]
-[
-  { name: "Craig", state: "MN" },
-  { name: "Tim", state: "MN" },
-  { name: "Joe", state: "CA" },
-].filter(sift({ $or: [{ name: "Craig" }, { state: "MN" }] }));
-```
-
-### \$nor
-
-opposite of or:
-
-```javascript
-// filtered: [{ name: 'Joe', state: 'CA' }]
-[
-  { name: "Craig", state: "MN" },
-  { name: "Tim", state: "MN" },
-  { name: "Joe", state: "CA" },
-].filter(sift({ $nor: [{ name: "Craig" }, { state: "MN" }] }));
-```
-
-### \$size
-
-Matches an array - must match given size:
-
-```javascript
-// filtered: ['food','cooking']
-[{ tags: ["food", "cooking"] }, { tags: ["traveling"] }].filter(
-  sift({ tags: { $size: 2 } }),
-);
-```
-
-### \$type
-
-Matches a values based on the type
-
-```javascript
-[new Date(), 4342, "hello world"].filter(sift({ $type: Date })); // returns single date
-[new Date(), 4342, "hello world"].filter(sift({ $type: String })); // returns ['hello world']
-```
-
-### \$regex
-
-Matches values based on the given regular expression
-
-```javascript
-["frank", "fred", "sam", "frost"].filter(
-  sift({ $regex: /^f/i, $nin: ["frank"] }),
-); // ["fred", "frost"]
-["frank", "fred", "sam", "frost"].filter(
-  sift({ $regex: "^f", $options: "i", $nin: ["frank"] }),
-); // ["fred", "frost"]
-```
-
-### \$where
-
-Matches based on some javascript comparison
-
-```javascript
-[{ name: "frank" }, { name: "joe" }].filter(
-  sift({ $where: "this.name === 'frank'" }),
-); // ["frank"]
-[{ name: "frank" }, { name: "joe" }].filter(
-  sift({
-    $where: function () {
-      return this.name === "frank";
-    },
-  }),
-); // ["frank"]
-```
-
-### \$elemMatch
-
-Matches elements of array
-
-```javascript
-var bills = [
-  {
-    month: "july",
-    casts: [
-      {
-        id: 1,
-        value: 200,
-      },
-      {
-        id: 2,
-        value: 1000,
-      },
-    ],
-  },
-  {
-    month: "august",
-    casts: [
-      {
-        id: 3,
-        value: 1000,
-      },
-      {
-        id: 4,
-        value: 4000,
-      },
-    ],
-  },
-];
-
-var result = bills.filter(
-  sift({
-    casts: {
-      $elemMatch: {
-        value: { $gt: 1000 },
-      },
-    },
-  }),
-); // {month:'august', casts:[{id:3, value: 1000},{id: 4, value: 4000}]}
-```
-
-### \$not
-
-Not expression:
-
-```javascript
-["craig", "tim", "jake"].filter(sift({ $not: { $in: ["craig", "tim"] } })); // ['jake']
-["craig", "tim", "jake"].filter(sift({ $not: { $size: 5 } })); // ['tim','jake']
-```
-
-### Date comparison
-
-Mongodb allows you to do date comparisons like so:
-
-```javascript
-db.collection.find({ createdAt: { $gte: "2018-03-22T06:00:00Z" } });
-```
-
-In Sift, you'll need to specify a Date object:
-
-```javascript
-collection.find(
-  sift({ createdAt: { $gte: new Date("2018-03-22T06:00:00Z") } }),
-);
-```
-
-## Custom behavior
-
-Sift works like MongoDB out of the box, but you're also able to modify the behavior to suite your needs.
-
-#### Custom operations
-
-You can register your own custom operations. Here's an example:
-
-```javascript
-import sift, { createEqualsOperation } from "sift";
-
-var filter = sift(
-  {
-    $customMod: 2,
-  },
-  {
-    operations: {
-      $customMod(params, ownerQuery, options) {
-        return createEqualsOperation(
-          (value) => value % params !== 0,
-          ownerQuery,
-          options,
-        );
-      },
-    },
-  },
-);
-
-[1, 2, 3, 4, 5].filter(filter); // [1, 3, 5]
-```
-
-#### Omitting built-in operations
-
-You can create a filter function that omits the built-in operations like so:
-
-```javascript
-import { createQueryTester, $in, $all, $nin, $lt } from "sift";
-const test = createQueryTester(
-  {
-    $eq: 10,
-  },
-  { operations: { $in, $all, $nin, $lt } },
-);
-
-[1, 2, 3, 4, 10].filter(test);
-```
-
-For bundlers like `Webpack` and `Rollup`, operations that aren't used are omitted from application bundles via tree-shaking.
+- [Getting professional support for whatwg-url](https://tidelift.com/subscription/pkg/npm-whatwg-url?utm_source=npm-whatwg-url&utm_medium=referral&utm_campaign=readme) as part of a Tidelift subscription. Tidelift helps making open source sustainable for us while giving teams assurances for maintenance, licensing, and security.
+- Contributing directly to the project.
