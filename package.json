@@ -1,34 +1,54 @@
 {
-  "name": "streamsearch",
-  "version": "1.1.0",
-  "author": "Brian White <mscdex@mscdex.net>",
-  "description": "Streaming Boyer-Moore-Horspool searching for node.js",
-  "main": "./lib/sbmh.js",
-  "engines": {
-    "node": ">=10.0.0"
-  },
-  "devDependencies": {
-    "@mscdex/eslint-config": "^1.1.0",
-    "eslint": "^7.32.0"
-  },
-  "scripts": {
-    "test": "node test/test.js",
-    "lint": "eslint --cache --report-unused-disable-directives --ext=.js .eslintrc.js lib test",
-    "lint:fix": "npm run lint -- --fix"
-  },
-  "keywords": [
-    "stream",
-    "horspool",
-    "boyer-moore-horspool",
-    "boyer-moore",
-    "search"
-  ],
-  "licenses": [{
-    "type": "MIT",
-    "url": "http://github.com/mscdex/streamsearch/raw/master/LICENSE"
-  }],
-  "repository": {
-    "type": "git",
-    "url": "http://github.com/mscdex/streamsearch.git"
-  }
+	"name": "strip-ansi",
+	"version": "6.0.1",
+	"description": "Strip ANSI escape codes from a string",
+	"license": "MIT",
+	"repository": "chalk/strip-ansi",
+	"author": {
+		"name": "Sindre Sorhus",
+		"email": "sindresorhus@gmail.com",
+		"url": "sindresorhus.com"
+	},
+	"engines": {
+		"node": ">=8"
+	},
+	"scripts": {
+		"test": "xo && ava && tsd"
+	},
+	"files": [
+		"index.js",
+		"index.d.ts"
+	],
+	"keywords": [
+		"strip",
+		"trim",
+		"remove",
+		"ansi",
+		"styles",
+		"color",
+		"colour",
+		"colors",
+		"terminal",
+		"console",
+		"string",
+		"tty",
+		"escape",
+		"formatting",
+		"rgb",
+		"256",
+		"shell",
+		"xterm",
+		"log",
+		"logging",
+		"command-line",
+		"text"
+	],
+	"dependencies": {
+		"ansi-regex": "^5.0.1"
+	},
+	"devDependencies": {
+		"ava": "^2.4.0",
+		"tsd": "^0.10.0",
+		"xo": "^0.25.3"
+	}
 }

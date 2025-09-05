@@ -1,4 +1,17 @@
-import sift from "./lib";
+/**
+Strip [ANSI escape codes](https://en.wikipedia.org/wiki/ANSI_escape_code) from a string.
 
-export default sift;
-export * from "./lib";
+@example
+```
+import stripAnsi = require('strip-ansi');
+
+stripAnsi('\u001B[4mUnicorn\u001B[0m');
+//=> 'Unicorn'
+
+stripAnsi('\u001B]8;;https://github.com\u0007Click\u001B]8;;\u0007');
+//=> 'Click'
+```
+*/
+declare function stripAnsi(string: string): string;
+
+export = stripAnsi;
