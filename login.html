@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="login.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <title>Document</title>
+    <style>
+    
+      h1 {
+          margin-top: 100px; /* Adjust this value as needed */
+      }
+  </style>
+</head>
+<body>
+   <div class="title">
+      <h2>Welcome Back!! </h2>
+   </div>
+   <div class="login">
+      <img src="assets/newlogo3.png" alt="logo" />
+      <div class="login1">
+    <h1>Log in</h1>
+    <form id="login" action="/login" method="POST">
+     <p class="loading"><i class="fa-solid fa-person-walking"></i><hr class="line"></p>
+        <!-- <input type="text" name="email" placeholder="Email Address" required> -->
+        <input type="text" name="username" placeholder="Username" required>
+        <input type="password" name="password" placeholder="Password" required>
+        <button type="submit">Login</button>
+        <p>Don't have an account?  <a href="./signup.html">Signup</a></p>
+    </form>
+    <p id="error-message" style="color: red;"></p> 
+    <script>
+      document.getElementById("login").addEventListener("submit", async (event) => {
+        event.preventDefault();
+
+        const formData = new FormData(event.target);
+        const loginData = {
+          username: formData.get("username"),
+          password: formData.get("password")
+        };
+
+        try {
+          const response = await fetch("/login", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(loginData)
+          });
+
+          const data = await response.json();
+          console.log("Login Response:", data);  // Debugging log
+
+          if (response.ok) {
+            console.log("Redirecting to:", data.redirect);
+            // For trainers, store the trainerId; for users, trainerId is null.
+            if (data.role === "trainer" && data.trainerId) {
+              localStorage.setItem("trainerId", data.trainerId);
+            }
+            window.location.href = data.redirect; // This should navigate to /user_dashboard.html
+          } else {
+            document.getElementById("error-message").innerText = data.error || "Login failed!";
+          }
+        } catch (error) {
+          console.error("Error logging in:", error);
+        }
+      });
+    </script>
+
+
+</div>
+</div>
+</body>
+</html>

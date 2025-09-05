@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> <!-- Add Chart.js -->
+    <style>
+        /* General Styles */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+            padding-top: 70px; /* Add padding to prevent content from being hidden behind the navbar */
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-top: 20px;
+        }
+
+        /* Chart Container Styles */
+        .chart-container {
+            width: 60%; /* Reduced width for chart containers */
+            margin: 20px auto;
+            background: #fff;
+            padding: 15px; /* Reduced padding */
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* Center content horizontally */
+            justify-content: center; /* Center content vertically */
+        }
+
+        .chart-container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Chart Styles */
+        canvas {
+            max-width: 100%;
+            height: 200px !important; /* Set a fixed height for all charts */
+        }
+
+        /* Card Container Styles */
+        .card-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center; /* Center cards horizontally */
+            gap: 20px; /* Space between cards */
+            margin: 20px auto;
+            max-width: 1200px; /* Adjust as needed */
+        }
+
+        /* Card Styles */
+        .card {
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 15px; /* Reduced padding */
+            width: 250px; /* Fixed width for cards */
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        .card h2 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 18px; /* Smaller font size for heading */
+        }
+
+        .card p {
+            color: #666;
+            font-size: 16px; /* Smaller font size for text */
+        }
+
+        /* Header Styles */
+        .header {
+            background: #fff; /* White background color */
+            color: #333; /* Dark text color for contrast */
+            padding: 10px 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add a subtle shadow for depth */
+            position: fixed; /* Make the navbar stick to the top */
+            top: 0; /* Position at the top */
+            left: 0; /* Align to the left */
+            width: 100%; /* Span the full width */
+            z-index: 1000; /* Ensure the navbar stays above other content */
+        }
+
+        .nav__logo a {
+            color: #333; /* Dark text color for logo */
+            text-decoration: none;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .nav__links {
+            list-style: none;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            margin: 0;
+            padding: 0;
+        }
+
+        .nav__links .link {
+            margin: 0 15px;
+        }
+
+        .nav__links .link a {
+            color: #333; /* Dark text color for links */
+            text-decoration: none;
+            font-size: 16px;
+        }
+
+        .nav__links .btn {
+            background: #ff4757; /* Red button background */
+            color: #fff; /* White text color for button */
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .nav__links .btn:hover {
+            background: #ff6b81; /* Lighter red on hover */
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.8s ease-out;
+        }
+        /* Header Styles */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: #fff; /* Adjust as needed */
+            z-index: 1000;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 3px 0; /* Reduce padding to decrease height */
+        }
+
+        nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 45px; /* Adjusted navbar height */
+        }
+
+        .nav__logo img {
+            height: 25px; /* Reduced logo size */
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <nav>
+          <div class="nav__header">
+            <div class="nav__logo">
+              <a href="#"><img src="assets/logo2.png" alt="logo" />Fitness</a>
+            </div>
+            <div class="nav__menu__btn" id="menu-btn">
+              <span><i class="ri-menu-line"></i></span>
+            </div>
+          </div>
+          <ul class="nav__links" id="nav-links">
+            <li class="link"><a href="\admin_dashboard.html">Dashboard</a></li>
+            <li class="link"><a href="\pictorial-dashboard.html">Pictorial Dashboard</a></li>
+            <button class="btn" data-open onclick="logout()">Logout</button>
+          </ul>
+        </nav>
+    </header>
+    <h1>Admin Dashboard</h1>
+
+    <!-- Card Container -->
+    <div class="card-container">
+        <!-- Users Card -->
+        <div class="card fade-in">
+            <h2>Total Users</h2>
+            <p id="totalUsers">Loading...</p>
+        </div>
+
+        <!-- Trainers Card -->
+        <div class="card fade-in">
+            <h2>Total Trainers</h2>
+            <p id="totalTrainers">Loading...</p>
+        </div>
+
+        <!-- Appointments Card -->
+        <div class="card fade-in">
+            <h2>Total Appointments</h2>
+            <p id="totalAppointments">Loading...</p>
+        </div>
+
+        <!-- Payments Card -->
+        <div class="card fade-in">
+            <h2>Total Payments</h2>
+            <p id="totalPayments">Loading...</p>
+        </div>
+    </div>
+
+    <!-- Users Chart -->
+    <div class="chart-container fade-in">
+        <h2>Users by Role</h2>
+        <canvas id="usersChart"></canvas>
+    </div>
+
+    <!-- Trainers Chart -->
+    <div class="chart-container fade-in">
+        <h2>Trainers</h2>
+        <canvas id="trainersChart"></canvas>
+    </div>
+
+    <!-- Appointments Chart -->
+    <div class="chart-container fade-in">
+        <h2>Appointments by Date</h2>
+        <canvas id="appointmentsChart"></canvas>
+    </div>
+
+    <!-- Payments Chart -->
+    <div class="chart-container fade-in">
+        <h2>Payments by Status</h2>
+        <canvas id="paymentsChart"></canvas>
+    </div>
+
+    <script>
+        async function fetchData() {
+            try {
+                // Fetch users data
+                const usersResponse = await fetch('/api/users');
+                const users = await usersResponse.json();
+
+                // Fetch trainers data
+                const trainersResponse = await fetch('/api/trainers');
+                const trainers = await trainersResponse.json();
+
+                // Fetch appointments data
+                const appointmentsResponse = await fetch('/api/appointments');
+                const appointments = await appointmentsResponse.json();
+
+                // Fetch payments data
+                const paymentsResponse = await fetch('/api/payments');
+                const payments = await paymentsResponse.json();
+
+                // Update cards
+                document.getElementById('totalUsers').textContent = users.length;
+                document.getElementById('totalTrainers').textContent = trainers.length;
+                document.getElementById('totalAppointments').textContent = appointments.length;
+                document.getElementById('totalPayments').textContent = payments.length;
+
+                // Process data for charts
+                const usersByRole = processUsersByRole(users);
+                const trainersData = processTrainersData(trainers);
+                const appointmentsByDate = processAppointmentsByDate(appointments);
+                const paymentsByStatus = processPaymentsByStatus(payments);
+
+                // Render charts
+                renderUsersChart(usersByRole);
+                renderTrainersChart(trainersData);
+                renderAppointmentsChart(appointmentsByDate);
+                renderPaymentsChart(paymentsByStatus);
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        }
+
+        // Process users data for the chart
+        function processUsersByRole(users) {
+            const roles = {};
+            users.forEach(user => {
+                roles[user.role] = (roles[user.role] || 0) + 1;
+            });
+            return {
+                labels: Object.keys(roles),
+                data: Object.values(roles)
+            };
+        }
+
+        // Process trainers data for the chart
+        function processTrainersData(trainers) {
+            const trainerNames = trainers.map(trainer => trainer.name);
+            return {
+                labels: trainerNames,
+                data: trainerNames.map(() => 1) // Each trainer counts as 1
+            };
+        }
+
+        // Process appointments data for the chart
+        function processAppointmentsByDate(appointments) {
+            const dates = {};
+            appointments.forEach(appointment => {
+                const date = new Date(appointment.date).toLocaleDateString();
+                dates[date] = (dates[date] || 0) + 1;
+            });
+            return {
+                labels: Object.keys(dates),
+                data: Object.values(dates)
+            };
+        }
+
+        // Process payments data for the chart
+        function processPaymentsByStatus(payments) {
+            const statuses = {};
+            payments.forEach(payment => {
+                statuses[payment.status] = (statuses[payment.status] || 0) + 1;
+            });
+            return {
+                labels: Object.keys(statuses),
+                data: Object.values(statuses)
+            };
+        }
+
+        // Render users chart
+        function renderUsersChart(usersByRole) {
+            const ctx = document.getElementById('usersChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'pie', // Pie chart for users by role
+                data: {
+                    labels: usersByRole.labels,
+                    datasets: [{
+                        label: 'Users by Role',
+                        data: usersByRole.data,
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.6)',
+                            'rgba(54, 162, 235, 0.6)',
+                            'rgba(75, 192, 192, 0.6)'
+                        ]
+                    }]
+                }
+            });
+        }
+
+        // Render trainers chart
+        function renderTrainersChart(trainersData) {
+            const ctx = document.getElementById('trainersChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'bar', // Bar chart for trainers
+                data: {
+                    labels: trainersData.labels,
+                    datasets: [{
+                        label: 'Trainers',
+                        data: trainersData.data,
+                        backgroundColor: 'rgba(75, 192, 192, 0.6)'
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+
+        // Render appointments chart
+        function renderAppointmentsChart(appointmentsByDate) {
+            const ctx = document.getElementById('appointmentsChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'line', // Line chart for appointments by date
+                data: {
+                    labels: appointmentsByDate.labels,
+                    datasets: [{
+                        label: 'Appointments by Date',
+                        data: appointmentsByDate.data,
+                        borderColor: 'rgba(54, 162, 235, 0.6)',
+                        fill: false
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+
+        // Render payments chart
+        function renderPaymentsChart(paymentsByStatus) {
+            const ctx = document.getElementById('paymentsChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'doughnut', // Doughnut chart for payments by status
+                data: {
+                    labels: paymentsByStatus.labels,
+                    datasets: [{
+                        label: 'Payments by Status',
+                        data: paymentsByStatus.data,
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.6)',
+                            'rgba(54, 162, 235, 0.6)',
+                            'rgba(75, 192, 192, 0.6)'
+                        ]
+                    }]
+                }
+            });
+        }
+
+        // Logout function
+        function logout() {
+            // Redirect to the login page
+            window.location.href = "/login.html"; // Replace with your login page URL
+        }
+
+        fetchData();
+    </script>
+</body>
+</html>

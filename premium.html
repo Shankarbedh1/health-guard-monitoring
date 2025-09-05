@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Make a Payment</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Your existing CSS styles */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: #fff;
+            z-index: 1000;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 3px 0;
+        }
+
+        nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 45px;
+        }
+
+        .nav__logo img {
+            height: 25px;
+        }
+
+        body {
+            padding-top: 50px;
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            text-align: center;
+        }
+
+        .container {
+            max-width: 400px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            color: #101215;
+        }
+
+        label {
+            display: block;
+            text-align: left;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .btn {
+            background-color: #ef2914;
+            color: white;
+            padding: 10px;
+            border: none;
+            width: 100%;
+            margin-top: 20px;
+            cursor: pointer;
+            font-size: 16px;
+            border-radius: 5px;
+        }
+
+        .btn:hover {
+            background-color: #0056b3;
+        }
+
+        .message {
+            margin-top: 15px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <nav>
+            <div class="nav__header">
+                <div class="nav__logo">
+                    <a href="#"><img src="assets/logo2.png" alt="logo" />Fitness</a>
+                </div>
+                <div class="nav__menu__btn" id="menu-btn">
+                    <span><i class="ri-menu-line"></i></span>
+                </div>
+            </div>
+            <ul class="nav__links" id="nav-links">
+                <li class="link"><a href="ind.html">Home</a></li>
+                <li class="link"><a href="about.html">About</a></li>
+                <li class="link"><a href="exercise.html">Exercises</a></li>
+                <li class="link"><a href="trainers.html">Trainers</a></li>
+                <li class="link"><a href="bmi.html">BMI</a></li>
+                <li class="dropdown">
+                    <button class="dropdown-button">
+                        <span>Contact Us</span>
+                    </button>
+                    <div class="dropdown-menu">
+                        <button><a href="mailto:samalasaiteja1143@gmail.com">Email</a></button>
+                        <button><a href="tel:6305103588">999xxxxxx</a></button>
+                    </div>
+                </li>
+                <li class="link"><button class="btn" id="logout-btn">Logout</button></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="section__container price__container" id="price">
+        <h2 class="section__header">Our Plans</h2>
+        <p class="section__description">
+            Our pricing plan comes with various membership tiers, each tailored to cater to different preferences and fitness aspirations.
+        </p>
+        <div class="price__grid">
+            <div class="price__card">
+                <div class="price__content">
+                    <h4>Diet Planning & Trainers Monitoring</h4>
+                    <img style="height: 100px; width:300px;" src="assets/diet.jpeg" alt="diet" />
+                    <img src="assets/trainer.webp" alt="trainer" />
+                    <p>Just ₹500/- Only For Audio Call</p>
+                    <p>Just ₹1000/- Only For Video Call</p>
+                    <hr />
+                    <h4>Key Features</h4>
+                    <p>Smart workout Diet plan</p>
+                    <p>At home workouts</p>
+                    <p>Trainer Suggestions</p>
+                    <p>Smart workout plan</p>
+                </div>
+            </div>
+
+            <div class="price__card">
+                <div class="price__content">
+                    <h2>Payment Details</h2>
+                    <form id="paymentForm">
+                        <label for="phone">Phone Number:</label>
+                        <input type="tel" id="phone" name="phone" required>
+
+                        <label for="paymentMethod">Payment Method:</label>
+                        <select id="paymentMethod" name="paymentMethod" required>
+                            <option value="UPI">UPI</option>
+                            <option value="Credit">Credit Card</option>
+                            <option value="Debit">Debit Card</option>
+                        </select>
+
+                        <!-- UPI ID Field -->
+                        <div id="upiField">
+                            <label for="upiId">UPI ID:</label>
+                            <input type="text" id="upiId" name="upiId">
+                        </div>
+
+                        <!-- Card Details -->
+                        <div id="cardFields" class="hidden">
+                            <label for="cardNumber">Card Number:</label>
+                            <input type="text" id="cardNumber" name="cardNumber">
+
+                            <label for="expiry">Expiry Date:</label>
+                            <input type="text" id="expiry" name="expiry" placeholder="MM/YY">
+
+                            <label for="cvv">CVV:</label>
+                            <input type="password" id="cvv" name="cvv">
+                        </div>
+
+                        <label for="callType">Call Type:</label>
+                        <select id="callType" name="callType" onchange="updateAmount()">
+                            <option value="audio">Audio Call</option>
+                            <option value="video">Video Call</option>
+                        </select>
+
+                        <label for="amount">Amount:</label>
+                        <input type="number" id="amount" name="amount" value="500" readonly required>
+
+                        <button type="submit" class="btn">Pay Now</button>
+                    </form>
+
+                    <div id="message" class="message"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // Toggle UPI and Card fields based on payment method
+        document.getElementById("paymentMethod").addEventListener("change", function() {
+            const paymentMethod = this.value;
+            document.getElementById("upiField").style.display = paymentMethod === "UPI" ? "block" : "none";
+            document.getElementById("cardFields").style.display = (paymentMethod === "Credit" || paymentMethod === "Debit") ? "block" : "none";
+        });
+
+        // Update amount based on call type
+        function updateAmount() {
+            const callType = document.getElementById("callType").value;
+            const amountInput = document.getElementById("amount");
+
+            if (callType === "audio") {
+                amountInput.value = 500; // Audio call price
+            } else if (callType === "video") {
+                amountInput.value = 1000; // Video call price
+            }
+        }
+
+        // Handle form submission
+        document.getElementById("paymentForm").addEventListener("submit", async function(event) {
+            event.preventDefault();
+
+            // Collect form data
+            const formData = {
+                phone: document.getElementById("phone").value,
+                paymentMethod: document.getElementById("paymentMethod").value,
+                upiId: document.getElementById("upiId").value,
+                cardNumber: document.getElementById("cardNumber").value,
+                expiry: document.getElementById("expiry").value,
+                cvv: document.getElementById("cvv").value,
+                amount: document.getElementById("amount").value,
+            };
+
+            try {
+                // Send data to the backend
+                const response = await fetch("/payment", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(formData),
+                });
+
+                const result = await response.json();
+                if (response.ok) {
+                    alert("Payment Successful!");
+                    window.location.href = "premiumuser.html"; // Redirect to premiumuser.html
+                } else {
+                    alert(`Payment Failed: ${result.message}`);
+                }
+            } catch (error) {
+                console.error("Error:", error);
+                alert("An error occurred. Please try again.");
+            }
+        });
+
+        // Logout button event
+        document.getElementById("logout-btn").addEventListener("click", function() {
+            window.location.href = "login.html";
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="signup.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <title>Document</title>
+</head>
+<body>
+    <div class="title">
+        <h2>Welcome to Our Fitness Application!!</h2>
+     </div>
+    <div class="signup">
+    <img src="assets/newlogo2.png" alt="logo" />
+    <div class="signup1">
+    <h1>Sign up</h1>
+    <form action="/signup" method="POST">
+        <!-- <p class="loading"><i class="fa-solid fa-person-walking"></i></p>  -->
+        <input type="email" name="email" placeholder="Enter Your Email Address" required>
+        <input type="text" name="name" placeholder="Enter Your Name" required>
+        <input type="text" name="username" placeholder="Enter Username" required>
+        <input type="password" name="password" placeholder="Enter Password" required>
+        <select name="role">
+            <option value="user">User</option>
+            <option value="trainer">Trainer</option>
+            <option value="admin">Admin</option>
+        </select>
+        <button type="submit" >Sign up</button>
+        <p class="signup-btn">Have an account?  <a href="./login.html">Log in</a></p>
+    </form>
+</div>
+</div>
+</body>
+</html>

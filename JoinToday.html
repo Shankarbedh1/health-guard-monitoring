@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Join Today</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            text-align: center;
+            margin: 50px;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            width: 300px;
+            margin: auto;
+            border-radius: 8px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background: #28a745;
+            border: none;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #218838;
+        }
+        .error {
+            color: red;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>Premium Member Accessy</h2>
+        <form id="joinForm">
+            <input type="text" id="name" name="name" placeholder="Enter your name" required>
+            <input type="text" id="phone" name="phone" placeholder="Enter your phone number" required>
+            <button type="submit">Submit</button>
+        </form>
+        <div id="errorMessage" class="error"></div>
+    </div>
+
+    <script>
+        document.getElementById("joinForm").addEventListener("submit", async function(event) {
+            event.preventDefault();
+
+            const name = document.getElementById("name").value.trim();
+            const phone = document.getElementById("phone").value.trim();
+            const errorMessage = document.getElementById("errorMessage");
+
+            // Clear previous error messages
+            errorMessage.textContent = "";
+
+            // Basic client-side validation
+            if (!name || !phone) {
+                errorMessage.textContent = "Please fill in all fields.";
+                return;
+            }
+
+            try {
+                const response = await fetch("/checkMembership", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ name, phone })
+                });
+
+                if (!response.ok) {
+                    throw new Error("Network response was not ok.");
+                }
+
+                const data = await response.json();
+
+                // Handle premium/non-premium logic
+                if (data.premium) {
+                    window.location.href = "/premiumuser.html";
+                } else {
+                    alert("You are not a premium user.");
+                    window.location.href = "/premium.html";
+                }
+            } catch (error) {
+                console.error("Error checking membership:", error);
+                errorMessage.textContent = "Something went wrong. Please try again.";
+            }
+        });
+    </script>
+
+</body>
+</html>

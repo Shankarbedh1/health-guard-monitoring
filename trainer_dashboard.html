@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link
+    href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css"
+    rel="stylesheet"
+  />
+  <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css"
+  />
+  <link rel="stylesheet" href="styles.css" />
+  <title>Trainer Dashboard</title>
+  <style>
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      margin-top: 20px;
+    }
+    table, th, td {
+      border: 1px solid #ccc;
+    }
+    th, td {
+      padding: 8px;
+      text-align: left;
+    }
+    .no-appointments {
+      margin-top: 20px;
+      font-weight: bold;
+      color: red;
+    }
+    .email-btn {
+      background-color: #007bff;
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      cursor: pointer;
+      border-radius: 4px;
+    }
+    .email-btn:hover {
+      background-color: #0056b3;
+    }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <nav>
+      <div class="nav__header">
+        <div class="nav__logo">
+          <a href="#"><img src="assets/logo2.png" alt="logo" />Fitness</a>
+        </div>
+        <div class="nav__menu__btn" id="menu-btn">
+          <span><i class="ri-menu-line"></i></span>
+        </div>
+      </div>
+      <ul class="nav__links" id="nav-links">
+        <li class="link"><a href="/trainer_dashboard">Dashboard</a></li>
+        <button class="btn" data-open>Logout</button>
+      </ul>
+    </nav>
+  </header>
+
+  <h2>Booked Appointments</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Gender</th>
+        <th>Age</th>
+        <th>Date</th>
+        <th>Time</th>
+        <th>Type</th>
+        <th>Phone</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody id="appointments-table">
+      <!-- Appointments will be injected here -->
+    </tbody>
+  </table>
+  <p id="no-appointments-message" class="no-appointments" style="display: none;">No appointments found.</p>
+
+  <script>
+    document.querySelector('.btn[data-open]').addEventListener('click', async () => {
+      try {
+        const response = await fetch('/logout', { method: 'POST' });
+
+        if (response.ok) {
+          localStorage.removeItem('trainerId');
+          window.location.href = '/'; 
+        } else {
+          console.error('Error logging out');
+        }
+      } catch (error) {
+        console.error('Error logging out:', error);
+      }
+    });
+
+    async function fetchTrainerAppointments() {
+      try {
+        const trainerId = localStorage.getItem("trainerId");
+        if (!trainerId) {
+          console.error("Trainer ID not found in localStorage!");
+          document.getElementById("no-appointments-message").style.display = "block";
+          return;
+        }
+
+        const response = await fetch(`/trainer/appointments/${trainerId}`);
+        if (!response.ok) throw new Error("Error fetching appointments");
+
+        const appointments = await response.json();
+        const tableBody = document.getElementById('appointments-table');
+        const noAppointmentsMessage = document.getElementById('no-appointments-message');
+        
+        tableBody.innerHTML = ""; 
+
+        if (appointments.length === 0) {
+          noAppointmentsMessage.style.display = "block";
+          return;
+        } else {
+          noAppointmentsMessage.style.display = "none";
+        }
+
+        appointments.forEach(appointment => {
+          const row = document.createElement("tr");
+          row.innerHTML = `
+            <td>${appointment.name}</td>
+            <td>${appointment.email}</td>
+            <td>${appointment.gender}</td>
+            <td>${appointment.age}</td>
+            <td>${new Date(appointment.date).toLocaleDateString()}</td>
+            <td>${appointment.time}</td>
+            <td>${appointment.appointmentType}</td>
+            <td>${appointment.appointmentPhone}</td>
+            <td>
+              <button class="email-btn" 
+                onclick="sendEmail('${appointment.email}', '${appointment.name}', '${new Date(appointment.date).toLocaleDateString()}', '${appointment.time}')">
+                Send Email
+              </button>
+            </td>
+          `;
+          tableBody.appendChild(row);
+        });
+      } catch (error) {
+        console.error("Error fetching trainer appointments:", error);
+      }
+    }
+
+    function sendEmail(email, name, date, time) {
+      const subject = encodeURIComponent("Your Appointment Details");
+      const googleMeetLink = "https://meet.google.com/rnh-oybt-dif";  
+
+      const body = encodeURIComponent(`Hello ${name},\n\nI am reaching out regarding your appointment.\n\nDate: ${date}\nTime: ${time}\nGoogle Meet Link: ${googleMeetLink}\n\nBest regards,\nTrainer`);
+
+      window.location.href = `mailto:${email}?subject=${subject}&body=${body}`;
+    }
+
+    window.onload = fetchTrainerAppointments;
+  </script>
+</body>
+</html>

@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trainers</title>
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css"/>
+    <link rel="stylesheet" href="styles.css" />
+    <style>        
+    .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: #fff; /* Adjust as needed */
+            z-index: 1000;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 3px 0; /* Reduce padding to decrease height */
+        }
+
+        nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 45px; /* Adjusted navbar height */
+        }
+
+        .nav__logo img {
+            height: 25px; /* Reduced logo size */
+        }
+
+        body {
+            padding-top: 50px; /* Adjust based on navbar height */
+        }
+    
+    </style>
+      <header class="header">
+        <nav>
+            <div class="nav__header">
+                <div class="nav__logo">
+                    <a href="#"><img src="assets/logo2.png" alt="logo" />Fitness</a>
+                </div>
+                <div class="nav__menu__btn" id="menu-btn">
+                    <span><i class="ri-menu-line"></i></span>
+                </div>
+            </div>
+            <ul class="nav__links" id="nav-links">
+                <li class="link"><a href="ind.html">Home</a></li>
+                <li class="link"><a href="about.html">About</a></li>
+                <li class="link"><a href="exercise.html">Exercises</a></li>
+              
+                <li class="link"><a href="bmi.html">BMI</a></li>
+                <li class="link"><a href="premium.html">Premium</a></li>
+                <li class="dropdown">
+                    <button class="dropdown-button">
+                        <span>Contact Us</span>
+                    </button>
+                    <div class="dropdown-menu">
+                        <button><a href="mailto:chittireddynikhithreddy@gmail.com">Email</a></button>
+                        <button><a href="tel:999xxxxxx">999xxxxxx</a></button>
+                    </div>
+                </li>
+                <li class="link"><button class="btn" id="logout-btn">Logout</button></li>
+            </ul>
+        </nav>
+    </header>
+
+</head>
+<body>
+
+  <section class="section__container trainer__container" id="trainer">
+    <h2 class="section__header">Our Trainers</h2>
+    <p class="section__description">
+      Our trainers are more than just experts in exercise; they are passionate
+      about helping you achieve your health and fitness goals. Our trainers
+      are equipped to tailor workout programs to meet your unique needs.
+    </p>
+    <div class="trainer__grid">
+      <div class="trainer__card">
+        <img src="assets/trainer-1.jpg" alt="trainer" />
+      </div>
+      <div class="trainer__card">
+        <div class="trainer__content">
+          <h4>Saiteja Samala</h4>
+          <h5>Strength and Conditioning</h5>
+          <hr />
+          <p>
+            With a background in competitive sports, he's dedicated to helping
+            you reach your peak physical performance.
+          </p>
+          <div class="trainer__socials">
+            <a href="#"><i class="ri-facebook-fill"></i></a>
+            <a href="#"><i class="ri-google-fill"></i></a>
+            <a href="#"><i class="ri-instagram-line"></i></a>
+            <a href="#"><i class="ri-twitter-fill"></i></a>
+          </div>
+        </div>
+      </div>
+      <div class="trainer__card">
+        <img src="assets/trainer-2.jpg" alt="trainer" />
+      </div>
+      <div class="trainer__card">
+        <div class="trainer__content">
+          <h4>Pavankumar Kumar</h4>
+          <h5>HIIT and Functional</h5>
+          <hr />
+          <p>
+            His energetic and dynamic workouts are designed to push your
+            limits, boost metabolism, and torch calories.
+          </p>
+          <div class="trainer__socials">
+            <a href="#"><i class="ri-facebook-fill"></i></a>
+            <a href="#"><i class="ri-google-fill"></i></a>
+            <a href="#"><i class="ri-instagram-line"></i></a>
+            <a href="#"><i class="ri-twitter-fill"></i></a>
+          </div>
+        </div>
+      </div>
+      <div class="trainer__card">
+        <img src="assets/trainer-3.jpg" alt="trainer" />
+      </div>
+      <div class="trainer__card">
+        <div class="trainer__content">
+          <h4>Shankar Beldhare</h4>
+          <h5>Yoga and Mindfulness</h5>
+          <hr />
+          <p>
+            Sessions are about physical postures and also about
+            cultivating inner peace and mindfulness.
+          </p>
+          <div class="trainer__socials">
+            <a href="#"><i class="ri-facebook-fill"></i></a>
+            <a href="#"><i class="ri-google-fill"></i></a>
+            <a href="#"><i class="ri-instagram-line"></i></a>
+            <a href="#"><i class="ri-twitter-fill"></i></a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <center><h4>More Trainers are added soon...!!</h4></center>
+  </section>
+  
+
+
+  <script>
+    document.getElementById("logout-btn").addEventListener("click", function () {
+        // Clear authentication data (adjust based on your auth system)
+        localStorage.removeItem("token"); // Remove stored token (if applicable)
+        sessionStorage.clear(); // Clear session storage (if applicable)
+
+        // Redirect to the login page
+        window.location.href = "login.html"; // Change this to your actual login page
+    });
+  </script>
+</body>
+</html>

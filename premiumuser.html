@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="deit.css" />
+    <link rel="stylesheet" href="premiumuser.css" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css"
+    /><style>
+      .header {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          background-color: #fff; /* Adjust as needed */
+          z-index: 1000;
+          box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+          padding: 3px 0; /* Reduce padding to decrease height */
+      }
+  
+      nav {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          height: 45px; /* Adjusted navbar height */
+      }
+  
+      .nav__logo img {
+          height: 25px; /* Reduced logo size */
+      }
+  
+      body {
+          padding-top: 50px; /* Adjust based on navbar height */
+      }
+/* Styles for the Logout Button */
+#logout-btn {
+    background-color: #ff4d4d; /* Red color for logout */
+    color: white;
+    border: none;
+    height: 50px; /* Set button height */
+    width: 120px; /* Set button width */
+    font-size: 16px; /* Text size */
+    font-weight: bold;
+    border-radius: 8px; /* Rounded edges */
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.2s ease;
+}
+
+/* Hover Effect */
+#logout-btn:hover {
+    background-color: #cc0000; /* Darker red on hover */
+    transform: scale(1.05); /* Slight zoom effect */
+}
+
+/* Optional: Adjust for Mobile */
+@media (max-width: 768px) {
+    #logout-btn {
+        height: 55px; /* Slightly taller on mobile */
+        width: 130px;
+        font-size: 18px;
+    }
+}
+
+
+
+  </style>
+  <header class="header">
+      <nav>
+          <div class="nav__header">
+              <div class="nav__logo">
+                  <a href="#"><img src="assets/logo2.png" alt="logo" />Fitness</a>
+              </div>
+              <div class="nav__menu__btn" id="menu-btn">
+                  <span><i class="ri-menu-line"></i></span>
+              </div>
+          </div>
+          <ul class="nav__links" id="nav-links">
+              <li class="link"><a href="ind.html">Home</a></li>
+              <li class="link"><a href="about.html">About</a></li>
+              <li class="link"><a href="exercise.html">Exercises</a></li>
+              <li class="link"><a href="trainers.html">Trainers</a></li>
+              <li class="link"><a href="bmi.html">BMI</a></li>
+              <li class="dropdown">
+                  <button class="dropdown-button">
+                      <span>Contact Us</span>
+                  </button>
+                  <div class="dropdown-menu">
+                      <button><a href="mailto:samalasaiteja1143@gmail.com">Email</a></button>
+                      <button><a href="tel:6305103588">999xxxxxx</a></button>
+                  </div>
+              </li>
+              <li class="link"><button class="btn" id="logout-btn">Logout</button></li>
+          </ul>
+      </nav>
+  </header>
+  
+
+<body>
+  
+
+
+    
+
+  <section class="section__container class__container" id="class">
+        <h2 class="section__header">You Are a Premium User Now!!</h2>
+        <p class="section__description">"Thank you for subscribing! We're thrilled to have you on board and look forward to providing you with the best experience. 
+            If you have any questions or need assistance, we're here to help. Welcome to our community!"</p><br><br>
+        
+            
+        <div class="premium-servies">
+          <div class="premium-servies-title" >
+            <h2 class="section__header">Services</h2>
+          </div>
+          <div class="premium-servies-buttons">    
+              <button id="premium-servies-btn" onclick="myFunction()"><a>Book an Appointment</a> <span><i class="fa-solid fa-arrow-right"></i></span></button>
+              <button id="premium-servies-btn" ><a href="bot.html">chat</a> <span><i class="fa-solid fa-arrow-right"></i></span></button>
+              <button id="premium-servies-btn" onclick="openDiet()"><a>Deit Calculation</a> <span><i class="fa-solid fa-arrow-right"></i></span></button>
+          </div>
+        </div>
+ 
+      
+    
+    <div class="appointmentcomponent " >
+      <div>                                                                                               
+        <h1>&nbsp;</h1>
+
+      </div>
+      <div><h1>&nbsp;</h1></div>
+     <div>
+      <h1>&nbsp;</h1>
+     </div>
+      <div id="profile-heading">
+        <h2>Book an Appointment</h2>
+        <button id="closeBtn" class="close-btn" onclick="Removebook()">&times; Close</button>
+      </div>
+      <form id="profileForm" action="/userappointment" method="post">
+        
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" value="" required>
+      
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" value="" required>
+      
+        <label for="trainerId">Trainer:</label>
+        <select id="trainerId" name="trainerId" required>
+          <option value="">Select a Trainer</option>
+        </select>
+          
+        <label for="gender">Gender:</label>
+        <select id="gender" name="gender">
+          <option value="male">Male</option>
+          <option value="female">Female</option>
+          <option value="other">Other</option>
+        </select>
+      
+        <label for="age">Age:</label>
+        <input type="number" id="age" name="age" min="1" max="120" value="">
+      
+        <label for="date">Date:</label>
+        <input type="date" id="date" name="date" value="" required>
+      
+        <label for="time">Time:</label>
+        <input type="time" id="time" name="time" value="" required>
+        
+        <label for="appointmentType">Appointment Type:</label>
+        <select id="appointmentType" name="appointmentType">
+          <option value="callappointment">Call Appointment (Mobile)</option>
+          <option value="videoappointment">Video Appointment (Google Meet)</option>
+        </select>
+        
+        <label for="appointmentPhone">Mobile Number:</label>
+        <input type="number" id="appointmentPhone" name="appointmentPhone" min="6000000000" max="9999999999" value="" required>
+      
+        <button class="submit" id="buttonsubmit" type="submit">Save Changes</button>
+      </form>
+      
+      <script>
+        // Fetch available trainers and populate the dropdown
+        async function loadTrainers() {
+          try {
+            const response = await fetch('/api/trainers');
+            const trainers = await response.json();
+            console.log("Trainers loaded:", trainers); // Debug log
+            const trainerSelect = document.getElementById('trainerId');
+        
+            trainers.forEach(trainer => {
+              const option = document.createElement('option');
+              option.value = trainer._id;  // Should be a valid 24-character ObjectId
+              option.textContent = trainer.name;
+              trainerSelect.appendChild(option);
+            });
+          } catch (error) {
+            console.error('Error fetching trainers:', error);
+          }
+        }
+        
+        // Validate form before submission to ensure a trainer is selected
+        document.getElementById("profileForm").addEventListener("submit", function (event) {
+          const trainerId = document.getElementById("trainerId").value;
+          console.log("Selected Trainer ID:", trainerId);
+          if (!trainerId) {
+            event.preventDefault();
+            alert("Please select a trainer.");
+          }
+        });
+        
+        // Autofill user email (if logged in) and load trainers
+        document.addEventListener("DOMContentLoaded", function () {
+          loadTrainers();
+          const loggedInEmail = localStorage.getItem("userEmail"); // Assuming user email is stored on login
+          if (loggedInEmail) {
+            document.getElementById("email").value = loggedInEmail;
+          }
+        });
+      </script>
+      
+    </div>  
+
+    <section class="section__container client__container" id="client">
+      <h2 class="section__header">Trainers</h2>
+      <p >
+        Our trainers are more than just experts in exercise; they are passionate
+          about helping you achieve your health and fitness goals. Our trainers are 
+          equipped to tailor workout programs to meet your unique needs.<br><br>
+          <ul style="list-style: none; color: #383737;">
+            <li><b>Personal Training:</b> Create customized workout plans just for you.</li>
+            <li><b>Virtual Trainering:</b> Provide guided workouts through videos or audio instructions.</li>
+            <li><b>Specialized Trainering:</b> Focus on specific types of exercise like yoga or strength training.</li>
+            <li><b>Nutrition Coaching:</b> Offer diet and nutrition advice to complement your fitness goals.</li>
+            <li><b>Community Training:</b> Share workouts and challenges within a fitness community for support and motivation.</li>
+            <li><b>AI Training:</b> Use technology to adjust workouts based on your progress and feedback.</li>
+          </ul>
+      </p>
+      <div class="swiper">
+        <div class="swiper-wrapper">
+          <div class="swiper-slide">
+            <div class="client__card">
+              <img src="assets/trainer001.jpeg" alt="client" />
+              <div class="client__ratings">
+                <span><i class="ri-star-fill"></i></span>
+                <span><i class="ri-star-fill"></i></span>
+                <span><i class="ri-star-fill"></i></span>
+                <span><i class="ri-star-fill"></i></span>
+                <span><i class="ri-star-line"></i></span>
+              </div>
+              <h6>Trainer ID: 001</h6>
+              <h4>Saiteja Samala</h4>
+              <h5>Strength and Conditioning</h5><br><hr>
+              <p>
+                With a background in competitive sports, he's dedicated to helping you reach your peak physical performance.
+              </p>
+              <p>Experience: 1 Year</p>
+              <p>Age: 21</p>
+              <p>Availability: Mon-Sat 7am-9pm</p>
+              <p>Email Id: nageshedlafitness@gmail.com</p>
+            </div>
+          </div>
+          <div class="swiper-slide">
+            <div class="client__card">
+              <img src="assets/trainer002.jpg" alt="client" />
+              <div class="client__ratings">
+                <span><i class="ri-star-fill"></i></span>
+                <span><i class="ri-star-fill"></i></span>
+                <span><i class="ri-star-fill"></i></span>
+                <span><i class="ri-star-fill"></i></span>
+                <span><i class="ri-star-half-fill"></i></span>
+              </div>
+              <h6>Trainer ID: 002</h6>
+              <h4>shanker beldhare</h4>
+              <h5>High-intensity functional training (HIFT)</h5><br><hr>
+              <p>
+                His energetic and dynamic workouts are designed to push your limits,
+                assists everyday movements like walking, sitting, lifting, pushing doors, etc.
+              </p>
+              <p>Experience: 1 Year</p>
+              <p>Age: 21</p>
+              <p>Availability: Mon-Sat 7am-9pm</p>
+              <p>Email Id: nithishkumarbollapellifitness@gmail.com</p>
+            </div>
+          </div>
+          <div class="swiper-slide">
+            <div class="client__card">
+              <img src="assets/trainer003.jpeg" alt="client" />
+              <div class="client__ratings">
+                <span><i class="ri-star-fill"></i></span>
+                <span><i class="ri-star-fill"></i></span>
+                <span><i class="ri-star-fill"></i></span>
+                <span><i class="ri-star-half-fill"></i></span>
+                <span><i class="ri-star-line"></i></span>
+              </div>
+              <h6>Trainer ID: 003</h6>
+              <h4>Pavan Kumar</h4>
+              <h5>Yoga and Mindfulness</h5><br><hr>
+              <p>
+              sessions are about physical postures and also about cultivating inner peace and mindfulness.
+              </p>
+              <p>Experience: 1 Year</p>
+              <p>Age: 21</p>
+              <p>Availability: Mon-Sat 7am-9pm</p>
+              <p>Email Id: srividhinreddypeddyreddyfitness@gmail.com</p>
+            </div>
+          </div>
+          <div class="swiper-slide">
+            <div class="client__card">
+              <img src="assets/trainer004.jpeg" alt="client" />
+              <div class="client__ratings">
+                <span><i class="ri-star-fill"></i></span>
+                <span><i class="ri-star-fill"></i></span>
+                <span><i class="ri-star-fill"></i></span>
+                <span><i class="ri-star-fill"></i></span>
+                <span><i class="ri-star-fill"></i></span>
+              </div>
+              <h6>Trainer ID: 004</h6>
+              <h4>Prasad</h4>
+              <h5>Yoga and Mindfulness</h5><br><hr>
+              <p>
+               sessions are about physical postures and also about cultivating inner peace and mindfulness.
+              </p>
+              <p>Experience: 1 Year</p>
+              <p>Age: 21</p>
+              <p>Availability: Mon-Sat 7am-9pm</p>
+              <p>Email Id: nikithreddychittireddyfitness@gmail.com</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section__container client__container" id="client">
+      <h2 class="section__header">What People Says About Us?</h2>
+      <p class="section__description">
+        These testimonials serve as a testament to our commitment to helping
+        individuals achieve their fitness goals, and fostering a supportive
+        environment for everyone who walks through our doors.
+      </p>
+      <!-- Slider main container -->
+      <div class="swiper">
+        <!-- Additional required wrapper -->
+        <div class="swiper-wrapper">
+          <!-- Slides -->
+          <div class="swiper-slide">
+            <div class="client__card">
+              <img src="assets/client-1.jpg" alt="client" />
+              <div class="client__ratings">
+                <span><i class="ri-star-fill"></i></span>
+                <span><i class="ri-star-fill"></i></span>
+                <span><i class="ri-star-fill"></i></span>
+                <span><i class="ri-star-fill"></i></span>
+                <span><i class="ri-star-line"></i></span>
+              </div>
+              <p>
+                The trainers here customized a plan that balanced my work-life
+                demands, and I've seen remarkable progress in my fitness
+                journey. It's not just a gym; it's my sanctuary for self-care.
+              </p>
+              <h4>Jane Smith</h4>
+              <h5>Marketing Manager</h5>
+            </div>
+          </div>
+          <div class="swiper-slide">
+            <div class="client__card">
+              <img src="assets/client-2.jpg" alt="client" />
+              <div class="client__ratings">
+                <span><i class="ri-star-fill"></i></span>
+                <span><i class="ri-star-fill"></i></span>
+                <span><i class="ri-star-fill"></i></span>
+                <span><i class="ri-star-fill"></i></span>
+                <span><i class="ri-star-half-fill"></i></span>
+              </div>
+              <p>
+                The trainers' expertise and the gym's commitment to cleanliness
+                during these times have made it a safe haven for me to maintain
+                my health and de-stress.
+              </p>
+              <h4>Emily Carter</h4>
+              <h5>Registered Nurse</h5>
+            </div>
+          </div>
+          <div class="swiper-slide">
+            <div class="client__card">
+              <img src="assets/client-3.jpg" alt="client" />
+              <div class="client__ratings">
+                <span><i class="ri-star-fill"></i></span>
+                <span><i class="ri-star-fill"></i></span>
+                <span><i class="ri-star-fill"></i></span>
+                <span><i class="ri-star-half-fill"></i></span>
+                <span><i class="ri-star-line"></i></span>
+              </div>
+              <p>
+                The variety of classes and the supportive community have kept me
+                motivated. I've shed pounds, gained confidence, and found a new
+                level of energy to inspire my students.
+              </p>
+              <h4>John Davis</h4>
+              <h5>Teacher</h5>
+            </div>
+          </div>
+          <div class="swiper-slide">
+            <div class="client__card">
+              <img src="assets/client-4.jpg" alt="client" />
+              <div class="client__ratings">
+                <span><i class="ri-star-fill"></i></span>
+                <span><i class="ri-star-fill"></i></span>
+                <span><i class="ri-star-fill"></i></span>
+                <span><i class="ri-star-fill"></i></span>
+                <span><i class="ri-star-fill"></i></span>
+              </div>
+              <p>
+                This gym's 24/7 access has been a lifesaver. Whether it's a
+                late-night workout or an early morning session, the convenience
+                here is unbeatable.
+              </p>
+              <h4>David Martinez</h4>
+              <h5>Entrepreneur</h5>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  
+    <div class="deit-container">
+      <div class="deit-container-inner">
+      <div class="deit-container-title">
+        <h1>Diet Plan Calculator</h1>
+        <button onclick="closeDiet()">Close</button>
+      </div>
+      
+      <form id="dietForm">
+          <!-- First Row -->
+          <div class="row">
+              <label for="user-age">Age:</label>
+              <input type="number" id="user-age"  name="user-age" required>
+
+              <label for="user-weight">Weight (kg):</label>
+              <input type="number" id="user-weight" name="user-weight" required>
+
+              <label for="user-height">Height (cm):</label>
+              <input type="number" id="user-height" name="user-height" required>
+          </div>
+
+          <!-- Second Row -->
+          <div class="row">
+              <label for="goal">Goal:</label>
+              <select id="goal" name="goal">
+                  <option value="gain">Gain weight</option>
+                  <option value="lose">Lose weight</option>
+              </select>
+
+              <label for="diet">Diet Type:</label>
+              <select id="diet" name="diet">
+                  <option value="veg">Vegetarian</option>
+                  <option value="non-veg">Non-Vegetarian</option>
+              </select>
+          </div>
+
+          <!-- Third Row -->
+          <div class="row">
+              <label for="activity">Activity Level:</label>
+              <select id="activity" name="activity">
+                  <option value="sedentary">Sedentary</option>
+                  <option value="light">Lightly active</option>
+                  <option value="moderate">Moderately active</option>
+                  <option value="active">Very active</option>
+                  <option value="extra">Extra active</option>
+              </select>
+
+              <label for="focus">Focus Area:</label>
+              <select id="focus" name="focus">
+                  <option value="arms">Arms</option>
+                  <option value="chest">Chest</option>
+                  <option value="legs">Legs</option>
+                  <option value="muscle">Muscle Gain</option>
+                  <option value="fat-loss">Fat Loss</option>
+                  <option value="full-body">Full Body</option>
+              </select>
+          </div>
+
+          <button type="button" onclick="calculateDiet()">Calculate</button>
+      </form>
+
+      <div id="results">
+          <h2>Results:</h2>
+          <p id="calories">Calories: -</p>
+          <p id="protein">Protein: -</p>
+          <p id="carbs">Carbohydrates: -</p>
+          <p id="fats">Fats: -</p>
+          <p id="dietType">Diet Type: -</p>
+          <p id="focusArea">Focus Area: -</p>
+          <p id="foodSuggestions">Food Suggestions: -</p>
+      </div>
+    </div>
+  </div>
+
+
+  
+
+    <script src="https://unpkg.com/scrollreveal"></script>
+    <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
+    <script src="script.js"></script>
+    <script src="main.js"></script>
+    <script src="deit.js"></script>
+    <script>// Logout button event
+      document.getElementById("logout-btn").addEventListener("click", function() {
+          window.location.href = "login.html";
+      });</script>
+    
+  
+</body>
+</html>
+
+
+<!-- 
+ <section class="section__container client__container" id="client">
+<h2 class="section__header">Trainers </h2>
+<ul class="trainers-list">
+      <li class="trainer-grid" >
+        <div class="logo">
+            <i class="fa-solid fa-user-tie"></i>
+        </div>
+        <div class="trainer-details">
+            <h6>Trainer ID: 001</h6>
+            <h2 class="">Dr. John Doe</h2>
+            <p>Age: 28</p>
+            <p>Specialization: Strength Training</p>
+            <p class="">Experience: 5 Years</p>
+            <p class="">Rating: ⭐️⭐️⭐️⭐️⭐️</p>
+            <p>Availability: Mon-Fri 6am-8pm</p>
+            <p>Email Address: john.doe@fittrainer.com</p>
+        </div>
+        <div class="trainer-book">
+          <button id="btn1" onclick="myFunction()"><a>Book an Appointment</a> <span><i class="fa-solid fa-arrow-right"></i></span></button>
+          <button id="btn1" ><a href="bot.html">chat</a> <span><i class="fa-solid fa-arrow-right"></i></span></button>
+          <button id="btn1" onclick="openDiet()"><a>share Querys</a> <span><i class="fa-solid fa-arrow-right"></i></span></button>
+        </div>
+     </li>
+      
+    
+</ul> 
+</section> -->

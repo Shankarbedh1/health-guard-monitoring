@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Send Zoom Meeting Link</title>
+  <script>
+    // Zoom meeting links based on email
+    const zoomLinks = {
+      "user1@example.com": "https://zoom.us/j/meeting-id-1",
+      "user2@example.com": "https://zoom.us/j/meeting-id-2",
+      "user3@example.com": "https://zoom.us/j/meeting-id-3"
+    };
+
+    // Function to send Zoom link via email
+    function sendZoomLink() {
+      const email = document.getElementById('emailInput').value;
+      const zoomLink = zoomLinks[email];
+
+      if (zoomLink) {
+        const subject = "Your Zoom Meeting Link";
+        const body = `Hello,\n\nHere is your Zoom meeting link: ${zoomLink}\n\nBest regards,\nYour Team`;
+
+        // Create a mailto link with pre-filled subject and body
+        const mailtoLink = `mailto:${email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+
+        // Open the default email client
+        window.location.href = mailtoLink;
+      } else {
+        alert('No Zoom link found for this email.');
+      }
+    }
+  </script>
+</head>
+<body>
+  <h1>Send Zoom Meeting Link</h1>
+  
+  <label for="emailInput">Enter Email: </label>
+  <input type="email" id="emailInput" placeholder="Enter your email">
+  
+  <button onclick="sendZoomLink()">Send Zoom Link</button>
+</body>
+</html>
