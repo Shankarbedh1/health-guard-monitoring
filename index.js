@@ -1,27 +1,16 @@
-"use strict";
+"use strict"
+var os = require("os")
 
-const { URL, URLSearchParams } = require("./webidl2js-wrapper");
-const urlStateMachine = require("./lib/url-state-machine");
-const percentEncoding = require("./lib/percent-encoding");
+var hasUnicode = module.exports = function () {
+  // Recent Win32 platforms (>XP) CAN support unicode in the console but
+  // don't have to, and in non-english locales often use traditional local
+  // code pages. There's no way, short of windows system calls or execing
+  // the chcp command line program to figure this out. As such, we default
+  // this to false and encourage your users to override it via config if
+  // appropriate.
+  if (os.type() == "Windows_NT") { return false }
 
-const sharedGlobalObject = { Array, Object, Promise, String, TypeError };
-URL.install(sharedGlobalObject, ["Window"]);
-URLSearchParams.install(sharedGlobalObject, ["Window"]);
-
-exports.URL = sharedGlobalObject.URL;
-exports.URLSearchParams = sharedGlobalObject.URLSearchParams;
-
-exports.parseURL = urlStateMachine.parseURL;
-exports.basicURLParse = urlStateMachine.basicURLParse;
-exports.serializeURL = urlStateMachine.serializeURL;
-exports.serializePath = urlStateMachine.serializePath;
-exports.serializeHost = urlStateMachine.serializeHost;
-exports.serializeInteger = urlStateMachine.serializeInteger;
-exports.serializeURLOrigin = urlStateMachine.serializeURLOrigin;
-exports.setTheUsername = urlStateMachine.setTheUsername;
-exports.setThePassword = urlStateMachine.setThePassword;
-exports.cannotHaveAUsernamePasswordPort = urlStateMachine.cannotHaveAUsernamePasswordPort;
-exports.hasAnOpaquePath = urlStateMachine.hasAnOpaquePath;
-
-exports.percentDecodeString = percentEncoding.percentDecodeString;
-exports.percentDecodeBytes = percentEncoding.percentDecodeBytes;
+  var isUTF8 = /UTF-?8$/i
+  var ctype = process.env.LC_ALL || process.env.LC_CTYPE || process.env.LANG
+  return isUTF8.test(ctype)
+}
