@@ -1,103 +1,79 @@
-var test = require("tape")
-var extend = require("./")
-var mutableExtend = require("./mutable")
+var alloc = require('buffer-alloc')
+var tape = require('tape')
+var bitfield = require('./')
 
-test("merge", function(assert) {
-    var a = { a: "foo" }
-    var b = { b: "bar" }
+tape('set and get', function (t) {
+  var bits = bitfield()
 
-    assert.deepEqual(extend(a, b), { a: "foo", b: "bar" })
-    assert.end()
+  t.same(bits.get(0), false, 'first bit is false')
+  bits.set(0, true)
+  t.same(bits.get(0), true, 'first bit is true')
+  t.same(bits.get(1), false, 'second bit is false')
+  bits.set(0, false)
+  t.same(bits.get(0), false, 'first bit is reset')
+  t.end()
 })
 
-test("replace", function(assert) {
-    var a = { a: "foo" }
-    var b = { a: "bar" }
+tape('set large and get', function (t) {
+  var bits = bitfield()
 
-    assert.deepEqual(extend(a, b), { a: "bar" })
-    assert.end()
+  t.same(bits.get(9999999999999), false, 'large bit is false')
+  bits.set(9999999999999, true)
+  t.same(bits.get(9999999999999), true, 'large bit is true')
+  t.same(bits.get(9999999999999 + 1), false, 'large bit + 1 is false')
+  bits.set(9999999999999, false)
+  t.same(bits.get(9999999999999), false, 'large bit is reset')
+  t.end()
 })
 
-test("undefined", function(assert) {
-    var a = { a: undefined }
-    var b = { b: "foo" }
+tape('get and set buffer', function (t) {
+  var bits = bitfield({trackUpdates: true})
 
-    assert.deepEqual(extend(a, b), { a: undefined, b: "foo" })
-    assert.deepEqual(extend(b, a), { a: undefined, b: "foo" })
-    assert.end()
+  t.same(bits.pages.get(0, true), undefined)
+  t.same(bits.pages.get(Math.floor(9999999999999 / 8 / 1024), true), undefined)
+  bits.set(9999999999999, true)
+
+  var bits2 = bitfield()
+  var upd = bits.pages.lastUpdate()
+  bits2.pages.set(Math.floor(upd.offset / 1024), upd.buffer)
+  t.same(bits2.get(9999999999999), true, 'bit is set')
+  t.end()
 })
 
-test("handle 0", function(assert) {
-    var a = { a: "default" }
-    var b = { a: 0 }
+tape('toBuffer', function (t) {
+  var bits = bitfield()
 
-    assert.deepEqual(extend(a, b), { a: 0 })
-    assert.deepEqual(extend(b, a), { a: "default" })
-    assert.end()
+  t.same(bits.toBuffer(), alloc(0))
+
+  bits.set(0, true)
+
+  t.same(bits.toBuffer(), bits.pages.get(0).buffer)
+
+  bits.set(9000, true)
+
+  t.same(bits.toBuffer(), Buffer.concat([bits.pages.get(0).buffer, bits.pages.get(1).buffer]))
+  t.end()
 })
 
-test("is immutable", function (assert) {
-    var record = {}
+tape('pass in buffer', function (t) {
+  var bits = bitfield()
 
-    extend(record, { foo: "bar" })
-    assert.equal(record.foo, undefined)
-    assert.end()
+  bits.set(0, true)
+  bits.set(9000, true)
+
+  var clone = bitfield(bits.toBuffer())
+
+  t.same(clone.get(0), true)
+  t.same(clone.get(9000), true)
+  t.end()
 })
 
-test("null as argument", function (assert) {
-    var a = { foo: "bar" }
-    var b = null
-    var c = void 0
+tape('set small buffer', function (t) {
+  var buf = alloc(1)
+  buf[0] = 255
+  var bits = bitfield(buf)
 
-    assert.deepEqual(extend(b, a, c), { foo: "bar" })
-    assert.end()
-})
-
-test("mutable", function (assert) {
-    var a = { foo: "bar" }
-
-    mutableExtend(a, { bar: "baz" })
-
-    assert.equal(a.bar, "baz")
-    assert.end()
-})
-
-test("null prototype", function(assert) {
-    var a = { a: "foo" }
-    var b = Object.create(null)
-    b.b = "bar";
-
-    assert.deepEqual(extend(a, b), { a: "foo", b: "bar" })
-    assert.end()
-})
-
-test("null prototype mutable", function (assert) {
-    var a = { foo: "bar" }
-    var b = Object.create(null)
-    b.bar = "baz";
-
-    mutableExtend(a, b)
-
-    assert.equal(a.bar, "baz")
-    assert.end()
-})
-
-test("prototype pollution", function (assert) {
-    var a = {}
-    var maliciousPayload = '{"__proto__":{"oops":"It works!"}}'
-
-    assert.strictEqual(a.oops, undefined)
-    extend({}, maliciousPayload)
-    assert.strictEqual(a.oops, undefined)
-    assert.end()
-})
-
-test("prototype pollution mutable", function (assert) {
-    var a = {}
-    var maliciousPayload = '{"__proto__":{"oops":"It works!"}}'
-
-    assert.strictEqual(a.oops, undefined)
-    mutableExtend({}, maliciousPayload)
-    assert.strictEqual(a.oops, undefined)
-    assert.end()
+  t.same(bits.get(0), true)
+  t.same(bits.pages.get(0).buffer.length, bits.pageSize)
+  t.end()
 })
